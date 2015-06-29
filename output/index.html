@@ -10,9 +10,17 @@
     var data2 = JSON.parse(data2);
 
     var ctx = document.getElementById("myChart1").getContext("2d");
-    var myNewChart = new Chart(ctx).Pie(data1);
+    var myNewChart = new Chart(ctx).Pie(data1, {
+      segmentShowStroke: true,
+      segmentStrokeColor: "#CCC",
+      segmentStrokeWidth: 1,
+    });
 
     var ctx = document.getElementById("myChart2").getContext("2d");
-    var myNewChart = new Chart(ctx).Doughnut(data2);
+    var myNewChart = new Chart(ctx).Doughnut(data2, {
+      segmentShowStroke: true,
+      segmentStrokeColor: "#CCC",
+      segmentStrokeWidth: 1,
+    });
   </script>
 </body>

@@ -82,7 +82,8 @@ def output_stat(name = 'data1', field = :lines)
 
   datas = []
   stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
-    datas << "{\"%s\":\"%s\", \"%s\":\"%d\"}" % [ "label", model[:file_name], "value", model[field] ]
+    color = "%06x" % (rand * 0xffffff)
+    datas << "{\"%s\":\"%s\", \"%s\":\"%d\", \"%s\":\"#%s\"}" % [ "label", model[:file_name], "value", model[field], "color", color ]
   end
 
   output << datas.join(",")
