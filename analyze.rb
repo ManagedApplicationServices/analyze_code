@@ -36,11 +36,20 @@ end
 #FIXME: need to refactor so can use for controller also ^_^
 def stats(type = "models")
   directory = directory_of_path(PATH + "/app/" + type)
+  sub_dir_stat(directory)
+end
 
+def sub_dir_stat(directory)
   result = []
+
   Dir.entries(directory)[2..-1].each do |sub_dir|
     path = directory_of_path(directory.path + '/' + sub_dir)
-    next if File.directory?(directory_of_path(path))
+
+    if File.directory?(directory_of_path(path))
+      result.concat(sub_dir_stat(path))
+      next
+    end
+
     data = File.open(path).read
 
     result << (
@@ -53,6 +62,7 @@ def stats(type = "models")
   end
 
   result
+
 end
 
 def model_stat(data)
