@@ -21,7 +21,7 @@ end
 def most_modifier
   output = %x( cd #{PATH} && git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -20)
   shell_output(output).each do |item|
-    p item
+    puts item
   end
 end
 
@@ -46,7 +46,8 @@ def stats(type = "models")
     result << (
       {
         file_name: sub_dir,
-        lines: lines(path)
+        lines: lines(path),
+        methods_count: methods_count(data)
       }.merge(model_stat(data))
     )
   end
@@ -62,6 +63,10 @@ def model_stat(data)
   }
 end
 
+def methods_count(data)
+  data.scan(/def\s+.+/).count
+end
+
 puts "="*30
 puts "\tProject size"
 
@@ -73,7 +78,7 @@ most_modifier
 
 puts "="*30
 
-printf "%-30s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs To", "Lines"
-stats.each do |model|
-  printf "%-30s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines]
+printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count"
+stats.sort {|stat| -stat[:lines].to_i}.each do |model|
+  printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count]
 end
