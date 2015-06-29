@@ -29,26 +29,37 @@ def shell_output(output)
   output.split("\n  ")[1..-1]
 end
 
-def model_stats
-  directory = directory_of_path(PATH + "/app/models")
+def lines(file)
+  %x( wc -l #{file.path} ).strip.split(' ').first
+end
+
+#FIXME: need to refactor so can use for controller also ^_^
+def stats(type = "models")
+  directory = directory_of_path(PATH + "/app/" + type)
 
   result = []
   Dir.entries(directory)[2..-1].each do |sub_dir|
     path = directory_of_path(directory.path + '/' + sub_dir)
-    next if File.directory?(File.open(path))
+    next if File.directory?(directory_of_path(path))
     data = File.open(path).read
 
     result << (
       {
         file_name: sub_dir,
-        has_many: data.scan(/has_many/i).count,
-        has_one: data.scan(/has_many/i).count,
-        belongs_to: data.scan(/belongs_to/).count
-      }
+        lines: lines(path)
+      }.merge(model_stat(data))
     )
   end
 
   result
+end
+
+def model_stat(data)
+  {
+    has_many: data.scan(/has_many/i).count,
+    has_one: data.scan(/has_many/i).count,
+    belongs_to: data.scan(/belongs_to/).count,
+  }
 end
 
 puts "="*30
@@ -62,7 +73,7 @@ most_modifier
 
 puts "="*30
 
-printf "%-30s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs To"
-model_stats.each do |model|
-  printf "%-30s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to]
+printf "%-30s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs To", "Lines"
+stats.each do |model|
+  printf "%-30s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines]
 end
