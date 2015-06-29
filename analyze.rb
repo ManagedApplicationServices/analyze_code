@@ -77,18 +77,40 @@ def methods_count(data)
   data.scan(/def\s+.+/).count
 end
 
-puts "="*30
-puts "\tProject size"
+def output_stat(name = 'data1', field = :lines)
+  output = "#{name}=\'["
 
-p file_size_format(fileSize(directory_of_path(PATH)))
+  datas = []
+  stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
+    datas << "{\"%s\":\"%s\", \"%s\":\"%d\"}" % [ "label", model[:file_name], "value", model[field] ]
+  end
 
-puts "="*30
-puts "\tTop 20 modifiered files"
-most_modifier
+  output << datas.join(",")
+  output << "]';"
 
-puts "="*30
-
-printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count"
-stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
-  printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count]
+  output
 end
+
+def export_to_json(output)
+  File.open("output/data.json", "a+") do |file|
+    file.write(output)
+  end
+end
+
+export_to_json(output_stat('data1', :lines))
+export_to_json(output_stat('data2', :methods_count))
+#puts "="*30
+#puts "\tProject size"
+
+#p file_size_format(fileSize(directory_of_path(PATH)))
+
+#puts "="*30
+#puts "\tTop 20 modifiered files"
+#most_modifier
+
+#puts "="*30
+
+#printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count"
+#stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
+  #printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count]
+#end
