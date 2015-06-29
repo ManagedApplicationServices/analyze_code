@@ -79,6 +79,6 @@ most_modifier
 puts "="*30
 
 printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count"
-stats.sort {|stat| -stat[:lines].to_i}.each do |model|
+stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
   printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count]
 end
