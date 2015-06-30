@@ -115,3 +115,8 @@ printf "%-30s%-10s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has On
 stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
   printf "%-30s%-10s%-10s%-10s%-10s%-10s%-10.2f\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count], model[:lines].to_f / model[:methods_count]
 end
+
+lines = stats.inject(0) { |result, item| result + item[:lines].to_i }
+methods = stats.inject(0) { |result, item| result + item[:methods_count].to_i }
+
+printf "Avg lines/method is: %5.2f. Avg lines/model %5.2f", methods / stats.count, lines / stats.count
