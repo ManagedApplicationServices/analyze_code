@@ -62,7 +62,6 @@ def sub_dir_stat(directory)
   end
 
   result
-
 end
 
 def model_stat(data)
@@ -100,18 +99,19 @@ end
 
 export_to_json(output_stat('data1', :lines))
 export_to_json(output_stat('data2', :methods_count))
-#puts "="*30
-#puts "\tProject size"
 
-#p file_size_format(fileSize(directory_of_path(PATH)))
+puts "="*30
+puts "\tProject size"
 
-#puts "="*30
-#puts "\tTop 20 modifiered files"
-#most_modifier
+p file_size_format(fileSize(directory_of_path(PATH)))
 
-#puts "="*30
+puts "="*30
+puts "\tTop 20 modifiered files"
+most_modifier
 
-#printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count"
-#stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
-  #printf "%-30s%-10s%-10s%-10s%-10s%-10s\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count]
-#end
+puts "="*30
+
+printf "%-30s%-10s%-10s%-10s%-10s%-10s%-10s\n", "File Name", "Has Many", "Has One", "Belongs", "Lines", "Methods Count", "Lines/methods"
+stats.sort_by {|stat| -stat[:lines].to_i}.each do |model|
+  printf "%-30s%-10s%-10s%-10s%-10s%-10s%-10.2f\n", model[:file_name], model[:has_many], model[:has_one], model[:belongs_to], model[:lines], model[:methods_count], model[:lines].to_f / model[:methods_count]
+end
